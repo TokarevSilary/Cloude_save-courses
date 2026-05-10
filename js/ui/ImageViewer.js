@@ -74,7 +74,6 @@ class ImageViewer {
         timeClick = setTimeout(()=>{
               if(count === 2){
                 this.prewire.src = img.src;
-                console.log(this.prewire)
               }
               count = 0;
             }

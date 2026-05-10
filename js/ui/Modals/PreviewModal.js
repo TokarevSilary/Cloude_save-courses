@@ -32,7 +32,7 @@ class PreviewModal extends BaseModal {
         const url = e.target.getAttribute('data-file');
         let containerOur = e.target.closest('.image-preview-container');
         let name = containerOur.querySelector('td');
-        Yandex.downloadFileByUrl(url, name.textContent)
+        Yandex.downloadFileByUrl(url, name.textContent.replace('.jpg', ''))
       }
     })
 
@@ -72,10 +72,12 @@ class PreviewModal extends BaseModal {
    * Возвращает разметку из изображения, таблицы с описанием данных изображения и кнопок контроллеров (удаления и скачивания)
    */
   getImageInfo(item) {
+    const img = (item.sizes || []).find(img => img.name === "M");
+    const original =(item.sizes || []).find(img => img.name === "ORIGINAL");
     return `
     
     <div class="image-preview-container">
-  <img src=${[...item.sizes].find((img)=>img.name === "M").url} />
+  <img src=${img ? img.url : item.preview} />
   <table class="ui celled table">
   <thead>
     <tr><th>Имя</th><th>Создано</th><th>Размер</th></tr>
@@ -90,7 +92,7 @@ class PreviewModal extends BaseModal {
       <i class="trash icon"></i>
     </button>
     <button class="ui labeled icon violet basic button download" data-file='
-      ${[...item.sizes].find((img)=>img.name === "ORIGINAL").url}
+      ${img ? img.url : item.preview}
       '>
       Скачать
       <i class="download icon"></i>

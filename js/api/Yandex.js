@@ -83,7 +83,7 @@ class Yandex {
         .then(blob => {
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = name;
+          link.download = name + ".jpg";
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
