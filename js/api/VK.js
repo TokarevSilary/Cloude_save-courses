@@ -7,7 +7,7 @@
  * */
 class VK {
 
-  static ACCESS_TOKEN = prompt("Введите VK Access Token");
+  static ACCESS_TOKEN = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008';
   static lastCallback;
 
   static currentScript;
