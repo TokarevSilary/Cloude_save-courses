@@ -67,20 +67,21 @@ class ImageViewer {
       })
     })
 
+    this.imgeContainer.addEventListener('dblclick', (event) => {
+      if(event.target.tagName === 'IMG'){
+
+        let img = event.target;
+        this.prewire.src = img.src;
+
+      }
+    })
+
     this.imgeContainer.addEventListener('click', (event) => {
       if(event.target.tagName === 'IMG'){
-        count++;
-        clearTimeout(timeClick);
         let img = event.target;
         img.classList.toggle('selected');
         this.checkButtonText();
-        timeClick = setTimeout(()=>{
-              if(count === 2){
-                this.prewire.src = img.src;
-              }
-              count = 0;
-            }
-            , 300)
+
       }
     })
 

@@ -67,7 +67,7 @@ class Yandex {
       path: 'resources/files',
       data: {
         media_type: "image",
-        sort: "-created"
+        sort: "created"
       },
       callback
     });
@@ -78,8 +78,6 @@ class Yandex {
    * Метод скачивания файлов
    */
   static downloadFileByUrl(path ){
-
-
 
     createRequest({
       method: 'GET',
@@ -109,41 +107,3 @@ class Yandex {
 
   }
 }
-
-// createRequest({
-//   method: 'GET',
-//   host: url,
-//   callback: (err, response) => {
-//     if (err) {
-//       console.error(err);
-//       return;
-//     }
-//     const a = document.createElement('a');
-//     a.href = url;
-//     a.download = `${name}.jpg`;
-//
-//     document.body.appendChild(a);
-//     a.click();
-//     a.remove();
-//   }
-// });
-
-// fetch(url)
-//     .then(response => response.blob())
-//     .then(blob => {
-//       const link = document.createElement('a');
-//       link.href = URL.createObjectURL(blob);
-//       link.download = name + ".jpg";
-//       document.body.appendChild(link);
-//       link.click();
-//       document.body.removeChild(link);
-//     })
-//     .catch(console.error);
-
-// const a = document.createElement('a');
-// a.href = url;
-// a.download = name + ".jpg";
-//
-// document.body.appendChild(a);
-// a.click();
-// a.remove();

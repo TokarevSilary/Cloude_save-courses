@@ -41,9 +41,6 @@ class FileUploaderModal extends BaseModal{
         const divInput = inputDivElement
             .querySelector('input');
 
-        if (divInput.value.trim() === '') {
-          inputDivElement.classList.add('error');
-        }
         if (!divInput.dataset.bound) {
           divInput.addEventListener('click', () => {
             inputDivElement.classList.remove('error');
@@ -51,16 +48,22 @@ class FileUploaderModal extends BaseModal{
           divInput.dataset.bound = "true";
         }
 
+        if (divInput.value.trim() === '') {
+          inputDivElement.classList.add('error');
+          return;
+        }
+
+
         const imageContainer = e.target.closest('.image-preview-container');
         const btn = imageContainer.querySelector('.ui.button');
         btn.classList.add('disabled');
+        this.sendImage(imageContainer)
+
+
 
       }
       if(e.target.classList.contains('send-all')){
-        let btns =this.content.querySelectorAll('.icon.upload');
-        btns.forEach(btn => {
-          btn.click();
-        })
+        this.sendAllImages();
       }
     })
   }
@@ -97,7 +100,11 @@ class FileUploaderModal extends BaseModal{
    * Отправляет все изображения в облако
    */
   sendAllImages() {
+    let btns =this.content.querySelectorAll('.icon.upload');
 
+    btns.forEach(btn => {
+      btn.click();
+    })
   }
 
   /**
@@ -106,23 +113,27 @@ class FileUploaderModal extends BaseModal{
 
 
   sendImage(imageContainer) {
-    if(!imageContainer.querySelector('.input').classList.contains('error')){
-      const path = imageContainer.querySelector('input').value.trim();
-      const urlImage = imageContainer.querySelector('img').src;
-      Yandex.uploadFile(path, urlImage, (error,response)=>{
-        const btn = imageContainer.querySelector('.ui.button');
-        btn.classList.remove('disabled');
-
-        if (error) {
-          console.error(error);
-          return;
-        }
-        imageContainer.remove();
-        if(this.content.querySelectorAll(".image-preview-container").length === 0){
-          this.close()
-        }
-      });
+    if(imageContainer.querySelector('.input').classList.contains('error')){
+      return;
     }
+
+
+    const path = imageContainer.querySelector('input').value.trim() + ".jpg";
+    const urlImage = imageContainer.querySelector('img').src;
+    Yandex.uploadFile(path, urlImage, (error,response)=>{
+      const btn = imageContainer.querySelector('.ui.button');
+      btn.classList.remove('disabled');
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+      imageContainer.remove();
+      if(this.content.querySelectorAll(".image-preview-container").length === 0){
+        this.close()
+      }
+    });
+
 
   }
 }

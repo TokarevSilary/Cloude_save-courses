@@ -24,6 +24,7 @@ class PreviewModal extends BaseModal {
       if(e.target.classList.contains('delete')) {
         let containerDelete = e.target.closest('.image-preview-container');
         let path = e.target.getAttribute('data-path');
+        e.target.classList.add('disabled');
         Yandex.removeFile(path, (err, response) => {
           if (err) {
             console.error(err);
@@ -33,9 +34,8 @@ class PreviewModal extends BaseModal {
         })
       }
       if(e.target.classList.contains('download')) {
-        let containerOur = e.target.closest('.image-preview-container');
-        let path = e.target.getAttribute('data-path');
-        Yandex.downloadFileByUrl(path , name.textContent.replace('.jpg', ''))
+        let path = e.target.getAttribute('data-file');
+        Yandex.downloadFileByUrl(path )
       }
     })
 
@@ -100,9 +100,7 @@ class PreviewModal extends BaseModal {
       Удалить
       <i class="trash icon"></i>
     </button>
-    <button class="ui labeled icon violet basic button download" data-file='
-      ${original ? original.url : (img ? img.url : item.preview)}
-      ' data-path='${item.path}' >
+    <button class="ui labeled icon violet basic button download" data-file='${item.path}' >
       Скачать
       <i class="download icon"></i>
     </button>
