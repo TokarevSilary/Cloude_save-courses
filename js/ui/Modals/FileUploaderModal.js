@@ -44,13 +44,16 @@ class FileUploaderModal extends BaseModal{
         if (divInput.value.trim() === '') {
           inputDivElement.classList.add('error');
         }
-        divInput.onclick = () => {
-          if(inputDivElement.classList.contains('error')){
+        if (!divInput.dataset.bound) {
+          divInput.addEventListener('click', () => {
             inputDivElement.classList.remove('error');
-          }
+          });
+          divInput.dataset.bound = "true";
         }
+
         const imageContainer = e.target.closest('.image-preview-container');
-        this.sendImage(imageContainer)
+        const btn = imageContainer.querySelector('.ui.button');
+        btn.classList.add('disabled');
 
       }
       if(e.target.classList.contains('send-all')){
@@ -101,20 +104,19 @@ class FileUploaderModal extends BaseModal{
    * Валидирует изображение и отправляет его на сервер
    */
 
-// <div class="image-preview-container">
-// <img src="https://sun9-23.userapi.com/s/v1/ig2/gPT4jUfMxb1Cei8ylXEj66ILybhQcFYoS4XDaOfm1fWWseQLE6mNafg0BtifISFCe0COs3SU7FNBUzUsarnoxQSc.jpg?quality=95&amp;as=32x40,48x60,72x90,108x135,160x200,240x301,360x451,480x601,540x677,640x802,720x902,1080x1353,1280x1604,1440x1804,2043x2560&amp;from=bu&amp;cs=2043x0">
-// <div class="ui action input">
-// <input type="text" placeholder="Путь к файлу">
-// <button class="ui button">
-// <i class="upload icon"></i>
-// </button>
-// </div>
-// </div>
+
   sendImage(imageContainer) {
     if(!imageContainer.querySelector('.input').classList.contains('error')){
       const path = imageContainer.querySelector('input').value.trim();
       const urlImage = imageContainer.querySelector('img').src;
-      Yandex.uploadFile(path, urlImage, (response)=>{
+      Yandex.uploadFile(path, urlImage, (error,response)=>{
+        const btn = imageContainer.querySelector('.ui.button');
+        btn.classList.remove('disabled');
+
+        if (error) {
+          console.error(error);
+          return;
+        }
         imageContainer.remove();
         if(this.content.querySelectorAll(".image-preview-container").length === 0){
           this.close()

@@ -38,6 +38,17 @@ class VK {
    * Является обработчиком ответа от сервера.
    */
   static processData(result) {
+    if (result.error) {
+      alert(`Ошибка VK: ${result.error.error_msg}`);
+      this.lastCallback = () => {};
+      return;
+    }
+
+    if (!result.response || !result.response.items) {
+      alert('Не удалось получить изображения');
+      this.lastCallback = () => {};
+      return;
+    }
     let ourImgLargest = [];
 
     const ourImg = result.response.items;

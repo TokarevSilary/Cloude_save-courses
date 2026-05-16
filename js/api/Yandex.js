@@ -77,25 +77,73 @@ class Yandex {
   /**
    * Метод скачивания файлов
    */
-  static downloadFileByUrl(url, name){
-    fetch(url)
-        .then(response => response.blob())
-        .then(blob => {
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = name + ".jpg";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        })
-        .catch(console.error);
+  static downloadFileByUrl(path ){
 
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = 'image.jpg';
-    //
-    // document.body.appendChild(a);
-    // a.click();
-    // a.remove();
+
+
+    createRequest({
+      method: 'GET',
+      host: this.HOST,
+      path: `resources/download`,
+      data: {
+        path: path,
+      },
+      callback: (err, response) => {
+        if(err) {
+          console.error(err);
+          return;
+        }
+
+        const a = document.createElement('a');
+        a.href = response.href;
+        a.download
+
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+
+      }
+    });
+
+
   }
 }
+
+// createRequest({
+//   method: 'GET',
+//   host: url,
+//   callback: (err, response) => {
+//     if (err) {
+//       console.error(err);
+//       return;
+//     }
+//     const a = document.createElement('a');
+//     a.href = url;
+//     a.download = `${name}.jpg`;
+//
+//     document.body.appendChild(a);
+//     a.click();
+//     a.remove();
+//   }
+// });
+
+// fetch(url)
+//     .then(response => response.blob())
+//     .then(blob => {
+//       const link = document.createElement('a');
+//       link.href = URL.createObjectURL(blob);
+//       link.download = name + ".jpg";
+//       document.body.appendChild(link);
+//       link.click();
+//       document.body.removeChild(link);
+//     })
+//     .catch(console.error);
+
+// const a = document.createElement('a');
+// a.href = url;
+// a.download = name + ".jpg";
+//
+// document.body.appendChild(a);
+// a.click();
+// a.remove();

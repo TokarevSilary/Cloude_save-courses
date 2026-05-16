@@ -14,9 +14,13 @@ const createRequest = (options = {}) => {
     xhr.setRequestHeader('Authorization', 'OAuth ' + aouth);
     xhr.responseType = 'json'
     xhr.onload = (e) => {
-        if(xhr.status >= 200 && xhr.status < 300){
-            options.callback(xhr.response);
+        if (xhr.status >= 200 && xhr.status < 300) {
+            options.callback(null, xhr.response);
+        } else {
+            options.callback(new Error(`Ошибка ${xhr.status}`), null);
         }
+        // options.callback(xhr.response);
+
     }
     try {
         xhr.send();

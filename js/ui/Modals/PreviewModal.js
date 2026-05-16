@@ -24,15 +24,18 @@ class PreviewModal extends BaseModal {
       if(e.target.classList.contains('delete')) {
         let containerDelete = e.target.closest('.image-preview-container');
         let path = e.target.getAttribute('data-path');
-        Yandex.removeFile(path, (response) => {
+        Yandex.removeFile(path, (err, response) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
           containerDelete.remove();
         })
       }
       if(e.target.classList.contains('download')) {
-        const url = e.target.getAttribute('data-file');
         let containerOur = e.target.closest('.image-preview-container');
-        let name = containerOur.querySelector('td');
-        Yandex.downloadFileByUrl(url, name.textContent.replace('.jpg', ''))
+        let path = e.target.getAttribute('data-path');
+        Yandex.downloadFileByUrl(path , name.textContent.replace('.jpg', ''))
       }
     })
 
@@ -44,6 +47,12 @@ class PreviewModal extends BaseModal {
    */
   showImages(data) {
     let containerImg = this.domElement.querySelector('.scrolling.content');
+
+    if (!data || !data.items) {
+      containerImg.innerHTML = '';
+      return;
+    }
+
       containerImg.innerHTML = data.items
           .reverse()
           .map( (image)  =>  this.getImageInfo(image)).join('');
@@ -92,8 +101,8 @@ class PreviewModal extends BaseModal {
       <i class="trash icon"></i>
     </button>
     <button class="ui labeled icon violet basic button download" data-file='
-      ${img ? img.url : item.preview}
-      '>
+      ${original ? original.url : (img ? img.url : item.preview)}
+      ' data-path='${item.path}' >
       Скачать
       <i class="download icon"></i>
     </button>

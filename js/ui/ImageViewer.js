@@ -46,12 +46,15 @@ class ImageViewer {
         }else if(event.target.classList.contains('show-uploaded-files')){
           const modal = App.getModal('filePreviewer');
           modal.open();
-          let callback = () => {
-            modal.showImages()
+          let callback = (err, response) => {
+            if(err) {
+              alert(err.message);
+              return;
+            }
+            modal.showImages(response)
           }
-          Yandex.getUploadedFiles((data)=>{
-            modal.showImages(data);
-          });
+          Yandex.getUploadedFiles(callback);
+
         }else if (event.target.classList.contains('send')) {
           const modal = App.getModal('fileUploader');
           const selected = this.imgeContainer.querySelectorAll('.image-wrapper img.selected');
@@ -95,11 +98,14 @@ class ImageViewer {
    * Отрисовывает изображения.
   */
   drawImages(images) {
+
+    let btnSelected = [...this.actionBtn].find(elem => elem.classList.contains('select-all'));
+    if(images.length > 0){
+      btnSelected.classList.remove('disabled');
+    }else btnSelected.classList.add('disabled');
+    this.imgeContainer.innerHTML = '';
     images.forEach(element=> {
-      let btnSelected = [...this.actionBtn].find(elem => elem.classList.contains('select-all'));
-      if(images.length > 0){
-        btnSelected.classList.remove('disabled');
-      }else btnSelected.classList.add('disabled');
+
       let wrapper = document.createElement("div");
       wrapper.classList.add(
           'four',
@@ -114,9 +120,10 @@ class ImageViewer {
       // img.style.width = 200 + 'px';
       // img.style.width = element.width + 'px';
       wrapper.appendChild(img);
-      this.imgeContainer.insertBefore(wrapper, this.imgeContainer.lastChild);
+      this.imgeContainer.appendChild(wrapper);
   }
-  )}
+  )
+  }
 
   /**
    * Контроллирует кнопки выделения всех изображений и отправки изображений на диск
@@ -126,18 +133,16 @@ class ImageViewer {
     const selected = this.imgeContainer.querySelectorAll('.image-wrapper img.selected');
 
     let btnSend = [...this.actionBtn].find(elem => elem.classList.contains('send'));
-    btnSend.classList.remove('disabled');
-
 
     let btnSelected = [...this.actionBtn].find(elem => elem.classList.contains('select-all'));
+
     if (images.length === 0) {
       btnSend.classList.add('disabled');
       btnSelected.textContent = 'Выбрать всё';
-      // btnSelected.classList.add('disabled');
       return;
     }
 
-    if (images.length > 0 && selected.length === images.length) {
+    if (selected.length === images.length) {
       btnSelected.innerHTML = 'Снять выделение';
     }else {
       btnSelected.innerHTML = 'Выбрать всё';
